@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Températures Tokyo</title>
+  <script src="https://www.gstatic.com/charts/loader.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0d0d0d;
+      min-height: 100vh;
+      padding: 40px 20px;
+      color: white;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Cercle rouge style drapeau japonais en fond */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -200px;
+      right: -200px;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(188,0,45,0.15), transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .flag-dot {
+      width: 60px;
+      height: 60px;
+      background: #bc002d;
+      border-radius: 50%;
+      margin: 0 auto 16px auto;
+      box-shadow: 0 0 40px rgba(188,0,45,0.6);
+    }
+
+    h1 {
+      font-size: 30px;
+      letter-spacing: 2px;
+      color: #ffffff;
+    }
+
+    h1 span {
+      color: #bc002d;
+    }
+
+    p.subtitle {
+      color: rgba(255,255,255,0.4);
+      margin-top: 8px;
+      font-size: 14px;
+      letter-spacing: 1px;
+    }
+
+    .chart-container {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(188,0,45,0.3);
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 1000px;
+      margin: 0 auto;
+      box-shadow: 0 0 60px rgba(188,0,45,0.1);
+    }
+
+    #chart_div {
+      width: 100%;
+      height: 500px;
+    }
+
+    #status {
+      text-align: center;
+      margin-top: 16px;
+      color: rgba(255,255,255,0.3);
+      font-size: 13px;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 30px;
+      color: rgba(255,255,255,0.2);
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="flag-dot"></div>
+    <h1>東京 — <span>TOKYO</span></h1>
+    <p class="subtitle">Prévisions de température horaires sur 7 jours · source open-meteo.com</p>
+  </header>
+
+  <div class="chart-container">
+    <div id="chart_div"></div>
+    <p id="status">Chargement des données...</p>
+  </div>
+
+  <footer>東京都 · JAPAN · open-meteo.com</footer>
+
+  <script>
+    google.charts.load('current', { packages: ['corechart'] });
+    google.charts.setOnLoadCallback(init);
+
+    async function init() {
+      try {
+        const res = await fetch('/tokyo');
+        const json = await res.json();
+
+        var dataArray = [['Date / Heure', 'Température (°C)']];
+        json.forEach(function(point) {
+          var parts = point.datetime.split('T');
+          dataArray.push([parts[0] + ' ' + parts[1], point.temperature_c]);
+        });
+
+        var data = google.visualization.arrayToDataTable(dataArray);
+
+        var options = {
+          title: 'Température à Tokyo (°C) — 7 prochains jours',
+          titleTextStyle: { color: '#ffffff', fontSize: 16, bold: true },
+          backgroundColor: 'transparent',
+          colors: ['#bc002d'],
+          areaOpacity: 0.2,
+          legend: { position: 'none' },
+          curveType: 'function',
+          hAxis: {
+            title: 'Date / Heure',
+            textStyle: { color: '#888888' },
+            titleTextStyle: { color: '#888888' },
+            slantedText: true,
+            slantedTextAngle: 45,
+            showTextEvery: 24,
+            gridlines: { color: 'rgba(255,255,255,0.05)' }
+          },
+          vAxis: {
+            title: '°C',
+            textStyle: { color: '#888888' },
+            titleTextStyle: { color: '#888888' },
+            gridlines: { color: 'rgba(255,255,255,0.05)' },
+            baselineColor: 'rgba(255,255,255,0.1)'
+          },
+          chartArea: { width: '85%', height: '70%' },
+          tooltip: {
+            textStyle: { color: '#000000' },
+            showColorCode: true
+          }
+        };
+
+        var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+
+        document.getElementById('status').textContent = '✓ ' + json.length + ' points chargés';
+      } catch(err) {
+        document.getElementById('status').textContent = 'Erreur : ' + err.message;
+      }
+    }
+  </script>
+
+</body>
+</html>
