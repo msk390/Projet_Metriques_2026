@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <meta charset="UTF-8"/>
+    <title>Histogramme Températures Paris</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load("current", {packages:["corechart"]});
+      google.charts.setOnLoadCallback(drawChart);
+
+      async function drawChart() {
+        // On récupère les données de ta propre API /paris
+        const res = await fetch('/paris');
+        const json = await res.json();
+
+        // On construit le tableau de données pour Google Charts
+        var dataArray = [['Heure', 'Température (°C)']];
+        json.forEach(function(point) {
+          var heure = point.datetime.replace('T', ' ');
+          dataArray.push([heure, point.temperature_c]);
+        });
+
+        var data = google.visualization.arrayToDataTable(dataArray);
+
+        var options = {
+          title: 'Températures horaires à Paris (7 prochains jours)',
+          legend: { position: 'none' },
+          hAxis: { title: 'Température (°C)' },
+          vAxis: { title: 'Fréquence' },
+        };
+
+        var chart = new google.visualization.Histogram(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+    </script>
+  </head>
+  <body>
+    <h2>Histogramme des températures — Paris</h2>
+    <div id="chart_div" style="width: 100%; height: 500px;"></div>
+  </body>
+</html>
