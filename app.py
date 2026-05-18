@@ -39,6 +39,25 @@ def mongraphique():
 def monhistogramme():
     return render_template("histogramme.html")
 
+@app.get("/tokyo")
+def api_tokyo():
+    url = "https://api.open-meteo.com/v1/forecast?latitude=35.6762&longitude=139.6503&hourly=temperature_2m"
+    response = requests.get(url)
+    data = response.json()
+
+    times = data.get("hourly", {}).get("time", [])
+    temps = data.get("hourly", {}).get("temperature_2m", [])
+
+    n = min(len(times), len(temps))
+    result = [
+        {"datetime": times[i], "temperature_c": temps[i]}
+        for i in range(n)
+    ]
+    return jsonify(result)
+
+@app.route("/atelier")
+def monatelier():
+    return render_template("atelier.html")
 
 
 
