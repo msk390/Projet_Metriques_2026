@@ -7,7 +7,7 @@ app = Flask(__name__)
 def hello_world():
     return render_template('hello.html')
 
-# Déposez votre code à partir d'ici :
+# Déposez votre code à partir d'ici o :
 
 @app.route("/contact")
 def MaPremiereAPI():
