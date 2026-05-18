@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 50px 40px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+    }
+
+    h1 {
+      color: #ffffff;
+      font-size: 28px;
+      margin-bottom: 6px;
+    }
+
+    p.subtitle {
+      color: rgba(255,255,255,0.5);
+      font-size: 14px;
+      margin-bottom: 36px;
+    }
+
+    .field {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      color: rgba(255,255,255,0.7);
+      font-size: 13px;
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    input, textarea {
+      width: 100%;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px;
+      padding: 14px 16px;
+      color: #ffffff;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.3s, background 0.3s;
+    }
+
+    input:focus, textarea:focus {
+      border-color: #e94560;
+      background: rgba(255,255,255,0.12);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 130px;
+    }
+
+    button {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #e94560, #c0392b);
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    button:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+    }
+
+    .success {
+      display: none;
+      text-align: center;
+      color: #2ecc71;
+      margin-top: 20px;
+      font-size: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>✉️ Contactez-moi</h1>
+    <p class="subtitle">Je vous répondrai dans les plus brefs délais.</p>
+
+    <div class="field">
+      <label>Prénom</label>
+      <input type="text" placeholder="Votre prénom"/>
+    </div>
+
+    <div class="field">
+      <label>Nom</label>
+      <input type="text" placeholder="Votre nom"/>
+    </div>
+
+    <div class="field">
+      <label>Message</label>
+      <textarea placeholder="Écrivez votre message ici..."></textarea>
+    </div>
+
+    <button onclick="envoyer()">Envoyer le message</button>
+    <p class="success" id="ok">✅ Message envoyé avec succès !</p>
+  </div>
+
+  <script>
+    function envoyer() {
+      document.getElementById('ok').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
